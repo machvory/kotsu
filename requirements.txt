@@ -1,0 +1,7 @@
+fastapi==0.143.0
+uvicorn[standard]==0.54.0
+python-multipart==0.0.32
+google-genai==2.30.0
+google-cloud-storage==3.17.0
+google-cloud-firestore==2.34.1
+google-cloud-texttospeech==2.38.0

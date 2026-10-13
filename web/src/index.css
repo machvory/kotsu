@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------------
+   KOTSU design tokens — light.
+
+   Anchored on the film's end card: a near-white page, near-black wordmark,
+   grey コツ, Google Sans Flex. The hues are the film's (teal for the expert and
+   what is correct, amber for the new worker and what needs attention, red only
+   ever for a defect), but each accent has a darker ink variant for text,
+   because the film's teal on white is unreadable and a factory tool has to be
+   legible on a bright screen in a bright room.
+
+   Contrast against the page: muted 5.4:1, teal-ink 5.2:1, amber-ink 5.6:1,
+   red-ink 6.4:1 — all above the 4.5:1 floor.
+   ------------------------------------------------------------------------ */
+
+@font-face {
+  font-family: "Google Sans Flex";
+  src: url("/fonts/GoogleSansFlex.woff2") format("woff2-variations");
+  font-weight: 300 800;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Google Sans Flex", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
+  --font-jp: "Noto Sans JP", "Google Sans Flex", sans-serif;
+
+  /* Surfaces: white, one light grey, one hairline. That is the whole set. */
+  --color-canvas: #ffffff;
+  --color-surface: #f5f5f7;
+  --color-raise: #ebebef;
+  --color-line: #d8d8de;
+  --color-line-2: #c3c3cb;
+
+  /* Ink: near-black, as the film's end card sets it, and two greys. */
+  --color-ink: #1d1d1f;
+  --color-muted: #6e6e73;
+  --color-faint: #86868b;
+
+  /* One accent, used only where it carries meaning: the expert, and what is
+     confirmed. It is Machvory's own cyan (#00a5eb) taken down until it reads as
+     text on white. Everything structural stays neutral. */
+  --color-accent: #0077c8;
+  --color-accent-ink: #015d9e;
+  --color-accent-wash: #eaf3fb;
+
+  /* The new worker is graphite, not a second brand colour — the lane is told
+     apart by its label and its position, not by flooding it with hue. */
+  --color-worker: #8e8e93;
+  --color-worker-ink: #55555a;
+
+  /* Reserved. Amber appears only when something needs attention, red only for
+     a defect. If they are on screen often, something is wrong. */
+  --color-amber: #b25e00;
+  --color-amber-ink: #8a4a00;
+  --color-amber-wash: #fdf4e9;
+  --color-red: #c0211e;
+  --color-red-ink: #a81b19;
+  --color-red-wash: #fdeeee;
+
+  --radius-panel: 14px;
+  --radius-card: 10px;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 420;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tracking and leading are size-specific. One letter-spacing value for every
+   size is wrong somewhere: large text reads too loose, small text too tight. */
+h1, h2, h3, h4 { font-weight: 560; color: var(--color-ink); }
+
+.t-display { font-size: 2.125rem; line-height: 1.08; letter-spacing: -0.028em; }
+.t-title   { font-size: 1.375rem; line-height: 1.18; letter-spacing: -0.021em; }
+.t-head    { font-size: 1.1875rem; line-height: 1.25; letter-spacing: -0.016em; }
+.t-sub     { font-size: 1.0625rem; line-height: 1.35; letter-spacing: -0.011em; }
+.t-body    { font-size: 0.9375rem; line-height: 1.55; letter-spacing: 0; }
+.t-small   { font-size: 0.8125rem; line-height: 1.5;  letter-spacing: 0.002em; }
+.t-label   { font-size: 0.6875rem; line-height: 1.4;  letter-spacing: 0.12em;
+             text-transform: uppercase; font-weight: 600; }
+
+/* Chrome is a translucent layer the content scrolls under, not an opaque strip
+   that eats a band of the page. */
+.material {
+  background: color-mix(in srgb, var(--color-canvas) 72%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* A scroll edge, not a hard divider: the content fades where it meets the
+   floating chrome. */
+.edge-fade::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -14px;
+  height: 14px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-canvas) 70%, transparent),
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* Press feedback belongs on pointer-down and has to be instant. */
+.press { transition: transform 110ms cubic-bezier(.2,.7,.3,1), background-color 110ms ease-out; }
+.press:active { transform: scale(0.978); }
+
+.jp { font-family: var(--font-jp); word-break: auto-phrase; line-break: strict; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-ink);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+::selection { background: #0077c826; }
+
+* { scrollbar-color: #c3c3cb transparent; scrollbar-width: thin; }
+
+input[type="range"] { accent-color: var(--color-accent-ink); }
+
+/* Reduced motion is a gentler equivalent, not the absence of feedback: colour
+   and opacity still change, only the movement goes. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+  .press:active { transform: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .material { background: var(--color-canvas); backdrop-filter: none; }
+  .edge-fade::after { display: none; }
+}
+
+@media (prefers-contrast: more) {
+  :root { --color-line: #8e8e93; --color-muted: #3a3a3c; }
+  .material { background: var(--color-canvas); backdrop-filter: none; }
+}
